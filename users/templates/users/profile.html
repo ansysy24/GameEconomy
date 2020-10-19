@@ -1,0 +1,59 @@
+{% extends "economy/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div style="width: 100%" class="content-section">
+
+        <table class="table w-40 mb-0">
+            <tbody>
+            <form method = "post">
+                <tr><td> <h2 class="account-heading">{{ user.username }}</h2></td><td> <button class="btn btn-outline-info" onclick="location.href='{% url 'change-password'%}'" type="button">
+                    Change Password</button></td></tr>
+            {% csrf_token %}
+
+                <tr> <td>Email</td><td> <input type="text" value="{{user.email}}" name="email"></td></tr>
+            <tr><td> Initials</td><td> <input type="text" value="{{user.profile.initials}}" name="initials"></td></tr>
+            <tr><td> Lottery Popups </td><td> <input type="checkbox" {% if user.profile.show_messages %} checked {% endif %} name="show_messages"></td></tr>
+            <tr><td> Subdomain </td><td> <input type="text" value="{{user.profile.subdomain}}" name="subdomain"></td></tr>
+            <tr><td></td><td><input type="submit" value="Save Changes" name="submit"/></td></tr>
+            </form>
+            </tbody></table>
+    </div>
+            {% csrf_token %}
+
+
+            <h2>Commodities</h2>
+    <form method = "post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="table w-100 mb-0">
+            <tbody>
+            <tr><td></td><td><strong>Commodities</strong></td><td><strong>New Price </strong><input type="text" style="width: 40%" name="new_price"/></td><td><strong>Suggested Price</strong></td></tr>
+            {% for comm in commodities %}
+                <tr>
+                {% if comm.on_the_market %}
+                    <td style="width: 3%"></td>
+                {% else %}
+                    <td style="width: 3%"><input type="checkbox" value="{{ comm.id }}" name="selected_items[]"></td>
+                {% endif %}
+                <td style="width: 15%"><a><input class="form-control" readonly type="text" value="{{ comm.title }}{{ comm.id }} - {{ comm.price }}f" /></a></td>
+                {% if comm.on_the_market %}
+                    <td style="width: 25%">On the Market <button type="submit" name="submit" value="Withdraw {{ comm.title }}-{{ comm.id }}">Withdraw</button></td>
+                    {% else %}
+                    <td><input type="submit" name="submit" value="Set new price for {{ comm.title }}-{{ comm.id }}"/></td>
+
+                {% endif %}
+                {% if comm.purchase.status == 1 %}
+                    <td><strong>{{ comm.purchase.suggested_price }}f</strong> <button type="submit" name="submit" value="Approve for {{ comm.title }}-{{ comm.id }}">Approve</button> <button type="submit" name="submit" value="Cancel for {{ comm.title }}-{{ comm.id }}">Disapprove</button></td>
+                {% elif not comm.on_the_market %}
+                    <td style="width: 25%"></td>
+                {% endif %}
+                </tr>
+            {% endfor %}
+            <tr><td></td><td><input type="submit" name="submit" value="Put On The Market"/></td></tr>
+            </tbody>
+    </table>
+    </form>
+
+
+
+
+{% endblock content %}

@@ -1,0 +1,104 @@
+{% extends "economy/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load static %}
+
+<style>
+
+.container1 {
+text-align: center;
+}
+
+.container1 img {
+   width: auto;
+   max-width:140pt;
+   height: 140pt;
+}
+
+</style>
+
+<body>
+    <main role="main">
+
+      <section class="jumbotron text-center" style="padding: 2pt">
+        <div class="container">
+          <h1 class="jumbotron-heading">Game Economy</h1>
+          <p class="lead text-muted">Game economy is a dockerized web-development project that will help you to learn a number of useful Django techniques.
+              The project follows all modern web application standards. The technologies used in this project include, but not limited to:
+                <a href="https://channels.readthedocs.io/en/latest/">Django Channels</a>,
+                <a href="https://en.wikipedia.org/wiki/ACID">Simple Market Transactions</a>,
+                <a href="https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html">Celery Periodic Tasks</a>,
+                <a href="https://cfpb.github.io/django-flags/">Django Flags</a>,
+                <a href="https://docs.djangoproject.com/en/3.1/topics/http/middleware/">Creation of Django Custom Middleware</a>,
+                <a href="https://en.wikipedia.org/wiki/Unit_testing">Unittests</a>.</p>
+        </div>
+      </section>
+
+
+        <div class = "content-section">
+    <form method = "POST">
+        {% csrf_token %}
+        <fieldset class = "form-group">
+            <legend class = "border-bottom mb-4">
+                Log In
+            </legend>
+            {{form|crispy}}
+        </fieldset>
+        <div class = "form-group">
+            <button class="btn btn-outline-info" type ="submit">Log In</button>
+        </div>
+    </form>
+    <div class = "border-top pt-3">
+
+    </div>
+</div>
+
+
+ <div class="album py-0 bg-light">
+        <div class="container">
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                  <div class="container1">
+                <img class="card-img-top" alt="Thumbnail [225x225]" src="{% static 'big_picture.PNG' %}">
+                  </div>
+                      <div class="card-body">
+                          <a style="width:100%">Project Big Picture</a>
+
+                  <div class="d-flex justify-content-between align-items-center">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                  <div class="container1">
+                <img class="card-img-top" alt="Thumbnail [225x225]" src="{% static 'economy_models.png'%}" >
+                  </div>
+                <div class="card-body">
+                    <a style="width:100%">Django Models</a>
+                  <div class="d-flex justify-content-between align-items-center">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                  <div class="container1">
+                <img class="card-img-top" alt="Thumbnail [225x225]" src="{% static 'market_use_cases.png'%}">
+                  </div>
+                <div class="card-body">
+                    <a style="width:100%">Market Use Cases</a>
+                  <div class="d-flex justify-content-between align-items-center">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+</body>
+{% endblock content %}

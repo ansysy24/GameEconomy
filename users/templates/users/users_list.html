@@ -1,0 +1,24 @@
+{% extends "economy/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+            <h2>List of users</h2>
+    {% for user in users %}
+        <div class="card mb-3" style="max-width: 700px;">
+          <div class="row no-gutters">
+
+            <div class="col-md-12">
+              <div class="card-body">
+                <h5 class="card-title">{{ user.username }}|Balance: {{ user.profile.balance }}f, {{ user.profile.balance_usd }}$
+                    <a href="{% url 'public-profile' user.profile.id %}" class="btn btn-primary">View Profile</a></h5>
+
+              </div>
+            </div>
+          </div>
+        </div>
+    {% endfor %}
+
+
+
+
+{% endblock content %}

@@ -1,0 +1,32 @@
+{% extends "economy/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+      <div class="media">
+        <div class="media-body">
+            <h2 class="account-heading">{{ public_user.username }}</h2>
+            <p> Email <input type="text" readonly value="{{public_user.email}}" name="email"></p>
+            <p> Initials <input type="text" readonly value="{{public_user.profile.initials}}" name="initials"></p>
+            <p> Subdomain <input type="text" readonly value="{{public_user.profile.subdomain}}" name="initials"></p>
+        </div>
+      </div>
+    </div>
+
+            <h2>Commodities</h2>
+    <table class="table w-100 mb-0">
+            <tbody>
+            {% for comm in commodities %}
+                <tr>
+                <td style="width: 25%"><a><input class="form-control" readonly type="text" value="{{ forloop.counter }}  {{ comm.title }} - {{ comm.price }}f" /></a></td>
+                {% if comm.on_the_market %}
+                <td style="width: 25%">On the Market</td>
+                    {% else %}
+                    <td style="width: 25%"></td>
+                {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+    </table>
+
+{% endblock content %}
+

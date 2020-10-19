@@ -1,0 +1,50 @@
+{% extends "economy/base.html" %}
+    {% block content %}
+<h1>Puchases</h1>
+<style>
+a.hidden {
+  display: none;
+}
+</style>
+
+        <form method="GET">
+            <input type="text" name="title_search" value="{% for k,v in request.GET.items %}{% if k == 'title_search' %}{{ v }}{% endif %}{%endfor%}"/>
+            <input type="submit" value="submit"/>
+            <label><input type=checkbox name="show_deleted" id="show_deleted"> Show Deleted</label><br/>
+        </form>
+
+
+    {% for purchase in page_obj %}
+        <div class="card mb-3">
+          <div class="row no-gutters">
+            <div class="col-md-8" >
+              <div class="card-body">
+                <h5 class="card-title">{{ purchase.title }}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+    {% endfor %}
+
+    {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{%endfor%}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <a class="btn btn-info mb-4" href="?page={{ num }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{%endfor%}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ num }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{%endfor%}">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{%endfor%}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{%endfor%}">Last</a>
+      {% endif %}
+
+    {% endif %}
+    {% endblock %}

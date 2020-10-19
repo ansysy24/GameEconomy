@@ -1,0 +1,96 @@
+{% extends "economy/base.html" %}
+    {% block content %}
+{% load static %}
+<style>
+ .button {
+ background-color: #1c87c9;
+ border: none;
+ color: white;
+ padding: 10px 16px;
+ text-align: center;
+ text-decoration: none;
+ display: inline-block;
+ font-size: 15px;
+ margin: 4px 2px;
+ cursor: pointer;
+ }
+
+.container1 {
+text-align: center;
+}
+
+.container1 img {
+   width: auto;
+   max-width:140pt;
+   height: 140pt;
+}
+
+</style>
+<body>
+
+    <main role="main">
+
+      <section class="jumbotron text-center" style="padding: 6pt">
+        <div class="container">
+          <h1 class="jumbotron-heading">Game Economy</h1>
+          <p class="lead text-muted">Game economy is a dockerized web-development project that will help you to learn a number of useful Django techniques.
+              The project follows all modern web application standards. The technologies used in this project include, but not limited to:
+                <a href="https://channels.readthedocs.io/en/latest/">Django Channels</a>,
+                <a href="https://en.wikipedia.org/wiki/ACID">Simple Market Transactions</a>,
+                <a href="https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html">Celery Periodic Tasks</a>,
+                <a href="https://cfpb.github.io/django-flags/">Django Flags</a>,
+                <a href="https://docs.djangoproject.com/en/3.1/topics/http/middleware/">Creation of Django Custom Middleware</a>,
+                <a href="https://en.wikipedia.org/wiki/Unit_testing">Unittests</a>.</p>
+        </div>
+      </section>
+
+
+      <div class="album py-0 bg-light">
+        <div class="container">
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                  <div class="container1">
+                <img class="card-img-top" alt="Thumbnail [225x225]" src="{% static 'big_picture.PNG' %}">
+                  </div>
+                      <div class="card-body">
+                          <a class="button" href="{% url 'project-structure' %}" style="width:100%">Project Big Picture</a>
+
+                  <div class="d-flex justify-content-between align-items-center">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                  <div class="container1">
+                <img class="card-img-top" alt="Thumbnail [225x225]" src="{% static 'economy_models.png'%}" >
+                  </div>
+                <div class="card-body">
+                    <a class="button" href="{% url 'models' %}" style="width:100%">Django Models</a>
+                  <div class="d-flex justify-content-between align-items-center">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                  <div class="container1">
+                <img class="card-img-top" alt="Thumbnail [225x225]" src="{% static 'market_use_cases.png'%}">
+                  </div>
+                <div class="card-body">
+                    <a class="button" href="{% url 'market-use' %}" style="width:100%">Market Use Cases</a>
+                  <div class="d-flex justify-content-between align-items-center">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+</body>
+
+    {% endblock %}

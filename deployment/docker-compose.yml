@@ -1,0 +1,300 @@
+version: '2.2'
+
+services:
+
+  uwsgi:
+    # Note you cannot scale if you use container_name
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: uwsgi
+    depends_on:
+      database:
+        condition: service_healthy
+    sysctls:
+      net.core.somaxconn: 10240
+    volumes:
+      - ../:/code
+      - ./config/uwsgi/uwsgi.conf:/uwsgi.conf
+      - ./static:/home/web/static
+      - ./media:/home/web/media
+      - ./logs:/var/log/
+    restart: always
+    cap_add:
+      - SYS_PTRACE
+    environment:
+      - C_FORCE_ROOT=${C_FORCE_ROOT}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
+      - BROKER_URL=${BROKER_URL}
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+    networks:
+      backend:
+        aliases:
+          - uwsgi
+
+  daphne:
+    # Note you cannot scale if you use container_name
+    build:
+      context: .
+      dockerfile: Dockerfile_daphne
+    hostname: daphne
+    depends_on:
+      database:
+        condition: service_healthy
+    sysctls:
+      net.core.somaxconn: 10240
+    volumes:
+      - ../:/code
+      - ./config/uwsgi/uwsgi.conf:/uwsgi.conf
+      - ./static:/home/web/static
+      - ./media:/home/web/media
+      - ./logs:/var/log/
+    restart: always
+    cap_add:
+      - SYS_PTRACE
+    environment:
+      - C_FORCE_ROOT=${C_FORCE_ROOT}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
+      - BROKER_URL=${BROKER_URL}
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+    networks:
+      backend:
+        aliases:
+          - daphne
+
+  web:
+    image: nginx
+    hostname: nginx
+    depends_on:
+      - uwsgi
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx/sites-enabled:/etc/nginx/conf.d
+      - ./logs:/var/log/nginx
+      - ./static:/home/web/static
+      - ./media:/home/web/media
+    ports:
+      - "80:8080"
+    networks:
+      - backend
+    restart: always
+
+  database:
+    image: postgres:11
+    sysctls:
+      net.core.somaxconn: 10240
+    restart: always
+    hostname: db
+    volumes:
+      - ./docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
+      - data1:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_MULTIPLE_DATABASES=economy_db, sentry
+      - PGDATA=/var/lib/postgresql/data/
+#    expose:
+#      - '5432'
+    networks:
+      backend:
+        aliases:
+        - db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d economy_db -U root"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+
+  pgbackups:
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    links:
+      - database:database
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=economy_db
+      - POSTGRES_HOST=db
+      - SCHEDULE=@daily
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=80
+    volumes:
+      - ./backups:/backups
+    networks:
+      - backend
+
+  sentry:
+    image: sentry
+    links:
+      - redis
+      - database
+    ports:
+      - 9000:9000
+    networks:
+      backend:
+        aliases:
+          - sentry
+    environment:
+      SENTRY_SECRET_KEY: 'qwerqqwetertyqertweryertwertrety'
+      SENTRY_POSTGRES_HOST: db
+      SENTRY_DB_USER: root
+      SENTRY_DB_PASSWORD: password123
+      SENTRY_REDIS_HOST: redis
+      SENTRY_DB_NAME: sentry
+      SENTRY_REDIS_DB: 9
+      SENTRY_SINGLE_ORGANIZATION: 'false'
+
+  cron:
+    image: sentry
+    links:
+      - redis
+      - database
+    command: "sentry run cron"
+    environment:
+      SENTRY_SECRET_KEY: 'qwerqqwetertyqertweryertwertrety'
+      SENTRY_POSTGRES_HOST: db
+      SENTRY_DB_USER: root
+      SENTRY_DB_PASSWORD: password123
+      SENTRY_REDIS_HOST: redis
+      SENTRY_DB_NAME: sentry
+      SENTRY_REDIS_DB: 9
+
+  worker:
+    image: sentry
+    links:
+      - redis
+      - database
+    command: "sentry run worker"
+    environment:
+      SENTRY_SECRET_KEY: 'qwerqqwetertyqertweryertwertrety'
+      SENTRY_POSTGRES_HOST: db
+      SENTRY_DB_USER: root
+      SENTRY_DB_PASSWORD: password123
+      SENTRY_REDIS_HOST: redis
+      SENTRY_DB_NAME: sentry
+      SENTRY_REDIS_DB: 9
+
+
+  rabbitmq:
+    image: rabbitmq:3.8.1-beta.1-management
+    hostname: rabbitmq
+    sysctls:
+      net.core.somaxconn: 10240
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
+      - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=0.59
+    volumes:
+      - ./mnesia:/var/lib/rabbitmq/mnesia
+    ports:
+      - 5672:5672
+      - 5671:5671
+      - 15672:15672
+      - 15671:15671
+    restart: always
+    networks:
+      backend:
+        aliases:
+          - rabbitmq
+
+  worker-tasks:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery worker -A economy.celery -P prefork -c 1 -l info -Q tasks -n tasks@%h
+#    scale: 1
+    sysctls:
+      net.core.somaxconn: 10240
+    links:
+      - rabbitmq:rabbitmq
+    cap_add:
+      - SYS_PTRACE
+    environment:
+      - C_FORCE_ROOT=${C_FORCE_ROOT}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
+      - BROKER_URL=${BROKER_URL}
+    volumes:
+      - ../:/code
+      - ./config/uwsgi/uwsgi.conf:/uwsgi.conf
+      - ./static:/home/web/static
+      - ./media:/home/web/media
+      - ./logs:/var/log/
+    restart: always
+    networks:
+      backend:
+        aliases:
+          - worker-tasks
+
+  beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A economy.celery beat -l info --pidfile=
+    sysctls:
+      net.core.somaxconn: 10240
+    links:
+      - rabbitmq:rabbitmq
+    cap_add:
+      - SYS_PTRACE
+    environment:
+      - C_FORCE_ROOT=${C_FORCE_ROOT}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
+      - BROKER_URL=${BROKER_URL}
+    volumes:
+      - ../:/code
+      - ./config/uwsgi/uwsgi.conf:/uwsgi.conf
+      - ./static:/home/web/static
+      - ./media:/home/web/media
+      - ./logs:/var/log/
+    restart: always
+    networks:
+      backend:
+        aliases:
+          - beat
+
+  redis:
+    image: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis_data:/data
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    restart: always
+    sysctls:
+      net.core.somaxconn: 10240
+    networks:
+      backend:
+        aliases:
+          - redis
+
+networks:
+  backend:
+
+volumes:
+  data1:
