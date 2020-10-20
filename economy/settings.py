@@ -24,8 +24,6 @@ from celery.schedules import crontab
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-env_file = os.path.join(BASE_DIR, 'deployment', '.env')
-os.environ.Env.read_env(env_file=env_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -36,11 +34,6 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'default_value')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# Local settings for debugging
-try:
-    from local_settings import *
-except ImportError:
-    pass
 
 ALLOWED_HOSTS = ['*']
 
@@ -232,7 +225,7 @@ CELERY_TASK_ROUTES = {
 
 CELERY_TASK_QUEUES = []
 
-CELERY_TIMEZONE = os.environ.get('CELERY_TIMEZONE')
+CELERY_TIMEZONE = os.environ.get('CELERY_TIMEZONE', 'UTC')
 
 # Celery beat
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
@@ -307,3 +300,9 @@ sentry_sdk.init(
     dsn="http://f6476a79a8794852893d6105a15cc015@sentry.localhost/1",
     integrations=[DjangoIntegration()]
 )
+
+# Local settings for debugging and local info
+try:
+    from local_settings import *
+except ImportError:
+    pass
