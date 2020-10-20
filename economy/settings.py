@@ -34,7 +34,13 @@ os.environ.Env.read_env(env_file=env_file)
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'default_value')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+# Local settings for debugging
+try:
+    from local_settings import *
+except ImportError:
+    pass
 
 ALLOWED_HOSTS = ['*']
 
