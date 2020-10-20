@@ -303,6 +303,6 @@ sentry_sdk.init(
 
 # Local settings for debugging and local info
 try:
-    from local_settings import *
+    from economy.local_settings import *
 except ImportError:
     pass
