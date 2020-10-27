@@ -1,3 +1,5 @@
+![Image of Yaktocat](economy/static/game_economy.PNG)
+
 <h1> Installation </h1>
 <ul>
 
