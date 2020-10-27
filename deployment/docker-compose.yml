@@ -148,7 +148,7 @@ services:
     networks:
       backend:
         aliases:
-          - sentry
+          - sentry.localhost
     environment:
       SENTRY_SECRET_KEY: 'qwerqqwetertyqertweryertwertrety'
       SENTRY_POSTGRES_HOST: db
@@ -164,6 +164,7 @@ services:
     links:
       - redis
       - database
+    restart: always
     command: "sentry run cron"
     environment:
       SENTRY_SECRET_KEY: 'qwerqqwetertyqertweryertwertrety'
@@ -173,12 +174,17 @@ services:
       SENTRY_REDIS_HOST: redis
       SENTRY_DB_NAME: sentry
       SENTRY_REDIS_DB: 9
+    networks:
+      backend:
+        aliases:
+          - sentry.cron
 
   worker:
     image: sentry
     links:
       - redis
       - database
+    restart: always
     command: "sentry run worker"
     environment:
       SENTRY_SECRET_KEY: 'qwerqqwetertyqertweryertwertrety'
@@ -188,7 +194,10 @@ services:
       SENTRY_REDIS_HOST: redis
       SENTRY_DB_NAME: sentry
       SENTRY_REDIS_DB: 9
-
+    networks:
+      backend:
+        aliases:
+          - sentry.worker
 
   rabbitmq:
     image: rabbitmq:3.8.1-beta.1-management

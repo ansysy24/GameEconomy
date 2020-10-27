@@ -276,7 +276,7 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'CSI_DB_Trial': {
+        'economy': {
             'handlers': ['console'],
             'level': 'INFO',
         },
@@ -292,13 +292,13 @@ LOGGING = {
 
 FLAGS = {
     'PUSHING_SUBDOMAIN_TO_ROUTE53': [],
-    'GIVING_DEFAULT_ITEMS_WHEN_PROFILE_CREATED': [],
-
+    'GIVING_DEFAULT_ITEMS_WHEN_PROFILE_CREATED': [{'condition': 'boolean', 'value': True}],
 }
 
 sentry_sdk.init(
-    dsn="http://f6476a79a8794852893d6105a15cc015@sentry.localhost/1",
-    integrations=[DjangoIntegration()]
+    dsn="http://f6476a79a8794852893d6105a15cc015:@sentry.localhost:9000/1",
+    integrations=[DjangoIntegration()],
+    debug=True
 )
 
 # Local settings for debugging and local info
