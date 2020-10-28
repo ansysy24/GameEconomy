@@ -11,7 +11,7 @@
 <li>2. Build and start the project:<br/>
 		<code>docker-compose up -d —build</code>
 </li>
-<li>3. If you want to check the status of the running containers, run:<br/>
+<li>3. It may take up to 10 minutes to build and start the project. If you want to check the status of the running containers, run:<br/>
 		<code>docker ps</code> <br/>
 		Celery beat container is going to keep restarting until you set up the database as it is shown in the next bulletpoint.
 </li>

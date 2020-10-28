@@ -232,7 +232,7 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_BEAT_SCHEDULE = {
 'lottery': {
 'task': 'economy.tasks.choose_winner',
-'schedule': crontab(minute='*/5'),
+'schedule': crontab(minute='*'),
 'args': (),
 },
 }
