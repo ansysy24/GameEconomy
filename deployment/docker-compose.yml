@@ -72,6 +72,8 @@ services:
       - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
       - BROKER_URL=${BROKER_URL}
       - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CELERY_TIMEZONE=${CELERY_TIMEZONE}
     networks:
       backend:
         aliases:
