@@ -23,6 +23,6 @@ def choose_winner():
     data = json.dumps({'balance': profile.balance, 'show_messages': profile.show_messages})
     async_to_sync(channel_layer.group_send)(
         'render_updates_group',
-        {'type': 'render', 'data': data, 'id': profile.id}
+        {'type': 'render', 'data': data, 'id': profile.user_id}
     )
     # return user
