@@ -40,7 +40,7 @@ ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = []
 
 def custom_show_toolbar(request):
-    return True
+    return False
 
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
