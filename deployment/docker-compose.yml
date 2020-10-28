@@ -250,6 +250,8 @@ services:
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
       - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
       - BROKER_URL=${BROKER_URL}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CELERY_TIMEZONE=${CELERY_TIMEZONE}
     volumes:
       - ../:/code
       - ./config/uwsgi/uwsgi.conf:/uwsgi.conf
