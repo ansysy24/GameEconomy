@@ -14,7 +14,7 @@ class BalanceConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_discart)('render_updates_group', self.channel_name)
 
     def render(self, event):
-        if self.user.profile.id == event['id']:
+        if self.user.id == event['id']:
             self.send(text_data=event['data'])
 
     # Receive message from WebSocket
