@@ -16,8 +16,8 @@ tldextract==3.0.2
 uwsgitop==0.11
 django-debug-toolbar==3.1.1
 django-model-utils==4.0.0
-channels
-channels_redis
+channels==2.4.0
+channels_redis==3.0.1
 django-extensions
 daphne==2.5.0
 django-flags==5.0.1
