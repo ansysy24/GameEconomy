@@ -17,7 +17,7 @@ uwsgitop
 django-debug-toolbar
 django-model-utils
 channels==2.4.0
-channels_redis==3.0.1
+channels_redis==2.4.2
 django-extensions
 daphne==2.5.0
 django-flags==5.0.1

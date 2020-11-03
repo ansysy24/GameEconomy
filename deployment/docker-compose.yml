@@ -74,6 +74,7 @@ services:
       - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
       - DB_PASSWORD=${DB_PASSWORD}
       - CELERY_TIMEZONE=${CELERY_TIMEZONE}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
     networks:
       backend:
         aliases:
