@@ -11,7 +11,7 @@ class BalanceConsumer(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, close_code):
-        async_to_sync(self.channel_layer.group_discart)('render_updates_group', self.channel_name)
+        async_to_sync(self.channel_layer.group_discard)('render_updates_group', self.channel_name)
 
     def render(self, event):
         if self.user.id == event['id']:

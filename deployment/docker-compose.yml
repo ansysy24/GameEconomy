@@ -74,6 +74,7 @@ services:
       - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
       - DB_PASSWORD=${DB_PASSWORD}
       - CELERY_TIMEZONE=${CELERY_TIMEZONE}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
     networks:
       backend:
         aliases:
@@ -159,14 +160,14 @@ services:
         aliases:
           - sentry.localhost
     environment:
-      SENTRY_SECRET_KEY: 'qwerqqwetertyqertweryertwertrety'
-      SENTRY_POSTGRES_HOST: db
-      SENTRY_DB_USER: root
-      SENTRY_DB_PASSWORD: password123
-      SENTRY_REDIS_HOST: redis
-      SENTRY_DB_NAME: sentry
-      SENTRY_REDIS_DB: 9
-      SENTRY_SINGLE_ORGANIZATION: 'false'
+      - SENTRY_SECRET_KEY=${SENTRY_SECRET_KEY}
+      - SENTRY_POSTGRES_HOST=db
+      - SENTRY_DB_USER=root
+      - SENTRY_DB_PASSWORD=${DB_PASSWORD}
+      - SENTRY_REDIS_HOST=redis
+      - SENTRY_DB_NAME=sentry
+      - SENTRY_REDIS_DB=9
+      - SENTRY_SINGLE_ORGANIZATION=false
 
 
   cron:
@@ -177,13 +178,14 @@ services:
     restart: always
     command: "sentry run cron"
     environment:
-      SENTRY_SECRET_KEY: 'qwerqqwetertyqertweryertwertrety'
-      SENTRY_POSTGRES_HOST: db
-      SENTRY_DB_USER: root
-      SENTRY_DB_PASSWORD: password123
-      SENTRY_REDIS_HOST: redis
-      SENTRY_DB_NAME: sentry
-      SENTRY_REDIS_DB: 9
+      - SENTRY_SECRET_KEY=${SENTRY_SECRET_KEY}
+      - SENTRY_POSTGRES_HOST=db
+      - SENTRY_DB_USER=root
+      - SENTRY_DB_PASSWORD=${DB_PASSWORD}
+      - SENTRY_REDIS_HOST=redis
+      - SENTRY_DB_NAME=sentry
+      - SENTRY_REDIS_DB=9
+      - SENTRY_SINGLE_ORGANIZATION=false
     networks:
       backend:
         aliases:
@@ -197,13 +199,14 @@ services:
     restart: always
     command: "sentry run worker"
     environment:
-      SENTRY_SECRET_KEY: 'qwerqqwetertyqertweryertwertrety'
-      SENTRY_POSTGRES_HOST: db
-      SENTRY_DB_USER: root
-      SENTRY_DB_PASSWORD: password123
-      SENTRY_REDIS_HOST: redis
-      SENTRY_DB_NAME: sentry
-      SENTRY_REDIS_DB: 9
+      - SENTRY_SECRET_KEY=${SENTRY_SECRET_KEY}
+      - SENTRY_POSTGRES_HOST=db
+      - SENTRY_DB_USER=root
+      - SENTRY_DB_PASSWORD=${DB_PASSWORD}
+      - SENTRY_REDIS_HOST=redis
+      - SENTRY_DB_NAME=sentry
+      - SENTRY_REDIS_DB=9
+      - SENTRY_SINGLE_ORGANIZATION=false
     networks:
       backend:
         aliases:
