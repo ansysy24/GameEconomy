@@ -86,6 +86,7 @@ services:
     depends_on:
       - uwsgi
     volumes:
+      - ./cert/game-economy_com.crt:/etc/nginx/game-economy_com.crt
       - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./config/nginx/sites-enabled:/etc/nginx/conf.d
       - ./logs:/var/log/nginx

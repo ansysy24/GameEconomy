@@ -139,3 +139,4 @@ deployment/pg/
 deployment/logs/
 deployment/backups/
 deployment/mnesia/
+deployment/cert/
