@@ -1,7 +1,7 @@
 // const balance = JSON.parse(document.getElementById('balance').textContent);
 
 const chatSocket = new WebSocket(
-    'ws://'
+    'wss://'
     + window.location.host
     + '/ws/socket/'
 );
