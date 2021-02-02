@@ -22,6 +22,8 @@ def home(request):
 
 @login_required(login_url='/login')
 def market_view(request):
+
+    # TODO use django forms and create class view
     if request.method == 'POST':
         suggested_price = request.POST.get('suggested_price')
         comm = request.POST.get('comm')
@@ -34,6 +36,7 @@ def market_view(request):
             commodity.purchase.status = Purchase.STATUS.awaiting
         else:
             commodity.purchase.status = Purchase.STATUS.approved
+            # TODO make sure what line is more important
             commodity.purchase.save()
             commodity.save()
             request.user.profile.buy_commodity(commodity, price)

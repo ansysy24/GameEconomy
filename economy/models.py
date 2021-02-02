@@ -14,7 +14,8 @@ class Commodity(models.Model):
     price = models.IntegerField(blank=True, null=True)
     sequence = models.IntegerField(blank=True, null=True)
 
-    def change_owner(self, profile):
+    def change_owner(self, profile: Profile):
+        # TODO explain
         self.owner = profile
         self.on_the_market = False
         commodities = Commodity.objects.filter(owner=profile)

@@ -304,8 +304,8 @@ except ImportError:
     pass
 
 
-sentry_sdk.init(
-    dsn=DNS,
-    integrations=[DjangoIntegration()],
-    debug=True
-)
+# sentry_sdk.init(
+#     dsn=DNS,
+#     integrations=[DjangoIntegration()],
+#     debug=True
+# )
