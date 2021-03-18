@@ -77,6 +77,9 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.user.username} Profile'
 
+    def __repr__(self):
+        return f'{self.user.username}'
+
     def put_on_market(self, sequence):
         from economy.models import Commodity, Purchase
         comm = Commodity.objects.get(owner=self, sequence=sequence)

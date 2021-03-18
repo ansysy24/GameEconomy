@@ -1,13 +1,18 @@
 import time
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.forms import inlineformset_factory
+from django.forms import formset_factory
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.cache import cache
 
+from economy.forms import CommodityPurchasingForm
 from economy.models import Commodity, Purchase
+from users.models import Profile
 
 events = dict()  # key: username # value: list of 'winner' strings
 
@@ -18,6 +23,9 @@ def home(request):
                }
     if request.method == 'GET':
         return render(request, 'economy/home.html', context)
+
+
+
 
 
 @login_required(login_url='/login')
@@ -44,7 +52,15 @@ def market_view(request):
         commodity.purchase.final_price = price
         commodity.purchase.save()
         commodity.save()
-    context = {'commodities': request.user.profile.get_market_items()}
+
+    # CommodityPurchasingFormSet = inlineformset_factory(Profile, Commodity, form=CommodityPurchasingForm, can_delete=False)
+    CommodityFormSet = formset_factory(CommodityPurchasingForm)
+
+    owners = Profile.objects.exclude(user=request.user)
+
+    # owner_formsets = [CommodityPurchasingFormSet(instance=owner) for owner in owners]
+
+    context = {'commodities': request.user.profile.get_market_items(), 'formsets': CommodityFormSet}
     return render(request, 'economy/market.html', context)
 
 

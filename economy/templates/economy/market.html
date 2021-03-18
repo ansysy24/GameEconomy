@@ -1,18 +1,31 @@
 {% extends "economy/base.html" %}
     {% block content %}
 <h1>Market</h1>
-            <form method = "post" enctype="multipart/form-data">
-    {% csrf_token %}
-        <table class="table w-100 mb-0">
-         <tbody>
-        {% for comm in commodities %}
+{#            <form method = "post" enctype="multipart/form-data">#}
+{#    {% csrf_token %}#}
+{#        <table class="table w-100 mb-0">#}
+{#         <tbody>#}
+{#        {% for comm in commodities %}#}
+{##}
+{#        <tr><td style="width: 30%"><p>Buy {{ comm.title }}-{{ comm.id }} from {{ comm.owner.user }} for {{ comm.price }}f</p></td>#}
+{#            <td style="width: 25%">Or Suggest your price</td><td  style="width: 30%"><input class="form-control" name="suggested_price" id="suggested_price" type="text" /></td>#}
+{#            <td style="width: 30%"><p>{{ comm.purchase.get_status_display }}</p></td>#}
+{#        <td><input type="submit" name="comm" value="Buy {{ comm.title }}-{{ comm.id }}"/></td></tr>#}
+{##}
+{#        {% endfor %}#}
+{##}
+{#        </tbody> </table>#}
+{#        </form>#}
 
-        <tr><td style="width: 30%"><p>Buy {{ comm.title }}-{{ comm.id }} from {{ comm.owner.user }} for {{ comm.price }}f</p></td>
-            <td style="width: 25%">Or Suggest your price</td><td  style="width: 30%"><input class="form-control" name="suggested_price" id="suggested_price" type="text" /></td>
-            <td style="width: 30%"><p>{{ comm.purchase.get_status_display }}</p></td>
-        <td><input type="submit" name="comm" value="Buy {{ comm.title }}-{{ comm.id }}"/></td></tr>
+        {% for formset in formsets %}
+            {% for form in formset %}
+                <form method="post" class="form-inline">
+                {% csrf_token %}
+                {{ form.as_table }}
+                <input type="submit" value="Buy {{ form.instance.title }}-{{ form.instance.id }}"/>
+                </form>
 
+            {% endfor %}
         {% endfor %}
-        </tbody> </table>
-        </form>
+
     {% endblock %}
