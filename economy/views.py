@@ -36,6 +36,7 @@ def market_view(request):
         suggested_price = request.POST.get('suggested_price')
         comm = request.POST.get('comm')
         comm_id = comm.split('-')[-1]
+
         commodity = Commodity.objects.get(id=int(comm_id))
         price = commodity.price
         if suggested_price:
@@ -53,15 +54,12 @@ def market_view(request):
         commodity.purchase.save()
         commodity.save()
 
-    # CommodityPurchasingFormSet = inlineformset_factory(Profile, Commodity, form=CommodityPurchasingForm, can_delete=False)
-    CommodityFormSet = formset_factory(CommodityPurchasingForm)
-
-    owners = Profile.objects.exclude(user=request.user)
-
-    # owner_formsets = [CommodityPurchasingFormSet(instance=owner) for owner in owners]
-
-    context = {'commodities': request.user.profile.get_market_items(), 'formsets': CommodityFormSet}
-    return render(request, 'economy/market.html', context)
+    commodities = request.user.profile.get_market_items()
+    forms = []
+    for commodity in commodities:
+        forms.append(
+            {'commodity': commodity, 'form': CommodityPurchasingForm()})
+    return render(request, 'economy/market.html', {'forms': forms})
 
 
 class PurchasesListView(LoginRequiredMixin, ListView):

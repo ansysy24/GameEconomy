@@ -17,15 +17,19 @@
 {#        </tbody> </table>#}
 {#        </form>#}
 
-        {% for formset in formsets %}
-            {% for form in formset %}
-                <form method="post" class="form-inline">
+        {% for form in forms %}
+                <div><form method="post" class="form-inline">
                 {% csrf_token %}
-                {{ form.as_table }}
-                <input type="submit" value="Buy {{ form.instance.title }}-{{ form.instance.id }}"/>
-                </form>
+                    {% for key, value in form.items %}
+                        {% if key == 'commodity' %} Buy {{ value.title }}-{{ value.id }} from {{value.owner.user.username}} for {{value.price}}f or suggest your price:{% endif %}
+                        {% if key == 'form' %} {{ value }} {% endif %}
+                        {% if key == 'commodity' %}<input type="submit" name="comm" value="Buy commodity {{ value.id }}"/>{% endif %}
+                    {% endfor %}
+                </form></div>
+        {% endfor %}
 
-            {% endfor %}
+        {% for comm in commodities %}
+            {{ comm }}
         {% endfor %}
 
     {% endblock %}

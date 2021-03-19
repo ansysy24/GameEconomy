@@ -11,6 +11,5 @@ class PlainTextWidget(forms.Widget):
 
 
 class CommodityPurchasingForm(forms.Form):
-    new_price = forms.IntegerField(label='suggest your price ')
-    class Meta:
-        exclude = ()
+    suggested_price = forms.IntegerField(label='')
+
