@@ -108,8 +108,9 @@ class Profile(models.Model):
                     self.balance = self.balance - price
                     self.save()
                     commodity.change_owner(self)
+                    commodity.purchase.buyer = self
                     commodity.purchase.title = commodity.purchase.seller.user.username + '|' +\
-                                               commodity.purchase.buyer.user.username + '|' + \
+                                               self.user.username + '|' + \
                                                commodity.title + '|' + str(commodity.purchase.final_price) + 'f'
                     commodity.purchase.save()
                     commodity.save()

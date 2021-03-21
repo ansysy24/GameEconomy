@@ -12,4 +12,8 @@ class PlainTextWidget(forms.Widget):
 
 class CommodityPurchasingForm(forms.Form):
     suggested_price = forms.IntegerField(label='')
-
+    def __init__(self, *args, **kwargs):
+        # first call parent's constructor
+        super().__init__(*args, **kwargs)
+        # there's a `fields` property now
+        self.fields['suggested_price'].required = False

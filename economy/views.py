@@ -35,9 +35,7 @@ def market_view(request):
     if request.method == 'POST':
         suggested_price = request.POST.get('suggested_price')
         comm = request.POST.get('comm')
-        comm_id = comm.split('-')[-1]
-
-        commodity = Commodity.objects.get(id=int(comm_id))
+        commodity = Commodity.objects.get(id=int(comm.split('-')[-1]))
         price = commodity.price
         if suggested_price:
             price = suggested_price
@@ -45,9 +43,6 @@ def market_view(request):
             commodity.purchase.status = Purchase.STATUS.awaiting
         else:
             commodity.purchase.status = Purchase.STATUS.approved
-            # TODO make sure what line is more important
-            commodity.purchase.save()
-            commodity.save()
             request.user.profile.buy_commodity(commodity, price)
         commodity.purchase.buyer = request.user.profile
         commodity.purchase.final_price = price
@@ -58,7 +53,7 @@ def market_view(request):
     forms = []
     for commodity in commodities:
         forms.append(
-            {'commodity': commodity, 'form': CommodityPurchasingForm()})
+            [commodity, CommodityPurchasingForm()])
     return render(request, 'economy/market.html', {'forms': forms})
 
 
