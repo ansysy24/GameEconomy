@@ -25,9 +25,6 @@ def home(request):
         return render(request, 'economy/home.html', context)
 
 
-
-
-
 @login_required(login_url='/login')
 def market_view(request):
 
