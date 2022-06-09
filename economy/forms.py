@@ -17,3 +17,4 @@ class CommodityPurchasingForm(forms.Form):
         super().__init__(*args, **kwargs)
         # there's a `fields` property now
         self.fields['suggested_price'].required = False
+
